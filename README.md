@@ -6,7 +6,7 @@ Uninstall any mods and attempt to replicate issues before reporting any suspecte
   
 Function  
 ========  
-Sorts equipped weapons by turret index, then by name.  
+Sorts equipped weapons list by turret index, then by name.  
   
 NOTE: You will need to equip, unequip or re-allocate a turret to perform the first sort.  From then, it will track such changes.  
   
