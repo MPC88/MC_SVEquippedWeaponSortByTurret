@@ -11,7 +11,7 @@ namespace MC_SVEquippedWeaponSortByTurretSlot
     {
         public const string pluginGuid = "mc.starvalor.equippedweaponsort";
         public const string pluginName = "SV Sort Equipped Weapons by Turret Slot";
-        public const string pluginVersion = "1.0.0";
+        public const string pluginVersion = "1.0.1";
 
         private static bool equipUnequipWeaponFlag = false;
 
@@ -70,7 +70,11 @@ namespace MC_SVEquippedWeaponSortByTurretSlot
         {
             EquipedWeapon selectedWeapon = null;
             if (shipInfo != null)
-                selectedWeapon = ss.shipData.weapons[(int)typeof(ShipInfo).GetField("selItemIndex", AccessTools.all).GetValue(shipInfo)];
+            {
+                int selIndex = (int)typeof(ShipInfo).GetField("selItemIndex", AccessTools.all).GetValue(shipInfo);
+                if (selIndex > 0 && selIndex < ss.shipData.weapons.Count)
+                    selectedWeapon = ss.shipData.weapons[selIndex];
+            }
 
             ss.shipData.weapons.Sort((EquipedWeapon x, EquipedWeapon y) =>
             {
@@ -86,17 +90,20 @@ namespace MC_SVEquippedWeaponSortByTurretSlot
             if (shipInfo != null)
             {
                 shipInfo.LoadData(true);
-                EquipmentSlot es = null;
-                foreach(Transform t in (Transform)typeof(ShipInfo).GetField("itemPanel", AccessTools.all).GetValue(shipInfo))
+                if (selectedWeapon != null)
                 {
-                    es = t.GetComponent<EquipmentSlot>();
-                    if (es != null && ss.shipData.weapons[es.itemIndex] == selectedWeapon)
-                        break;
-                }
-                if (es != null)
-                {
-                    typeof(ShipInfo).GetField("selSlotIndex", AccessTools.all).SetValue(shipInfo, es.slotIndex);
-                    typeof(ShipInfo).GetField("selItemIndex", AccessTools.all).SetValue(shipInfo, es.itemIndex);
+                    EquipmentSlot es = null;
+                    foreach (Transform t in (Transform)typeof(ShipInfo).GetField("itemPanel", AccessTools.all).GetValue(shipInfo))
+                    {
+                        es = t.GetComponent<EquipmentSlot>();
+                        if (es != null && ss.shipData.weapons[es.itemIndex] == selectedWeapon)
+                            break;
+                    }
+                    if (es != null)
+                    {
+                        typeof(ShipInfo).GetField("selSlotIndex", AccessTools.all).SetValue(shipInfo, es.slotIndex);
+                        typeof(ShipInfo).GetField("selItemIndex", AccessTools.all).SetValue(shipInfo, es.itemIndex);
+                    }
                 }
             }
         }
