@@ -11,7 +11,7 @@ namespace MC_SVEquippedWeaponSortByTurretSlot
     {
         public const string pluginGuid = "mc.starvalor.equippedweaponsort";
         public const string pluginName = "SV Sort Equipped Weapons by Turret Slot";
-        public const string pluginVersion = "1.0.1";
+        public const string pluginVersion = "1.1.0";
 
         private static bool equipUnequipWeaponFlag = false;
 
@@ -29,10 +29,10 @@ namespace MC_SVEquippedWeaponSortByTurretSlot
 
         [HarmonyPatch(typeof(Inventory), nameof(Inventory.EquipItem))]
         [HarmonyPrefix]
-        private static void InventoryEquip_Pre(int ___selectedItem, CargoSystem ___cs)
+        private static void InventoryEquip_Pre(int ___selectedItem)
         {
             if (___selectedItem > -1 &&
-                ___cs.cargo[___selectedItem].itemType == 1)
+                PlayerControl.inst.GetCargoSystem.cargo[___selectedItem].itemType == 1)
                 equipUnequipWeaponFlag = true;
         }
 
